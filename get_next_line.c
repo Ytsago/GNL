@@ -6,26 +6,13 @@
 /*   By: secros <secros@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:24:57 by secros            #+#    #+#             */
-/*   Updated: 2024/11/25 17:38:44 by secros           ###   ########.fr       */
+/*   Updated: 2024/11/27 17:29:00 by secros           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	*create_node(t_list **save, char *buff, ssize_t readed)
-{
-	char	*str;
-
-	str = malloc((1 + readed) * sizeof(char));
-	if (!str)
-		return (NULL);
-	str[readed] = '\0';
-	while (readed--)
-		str[readed] = buff[readed];
-	return(ft_lstadd_back(save, ft_lstnew(str)));
-}
-
-int	new_line(t_list *lst)
+size_t	new_line(t_list *lst)
 {
 	size_t	i;
 	char	*str;
@@ -37,63 +24,121 @@ int	new_line(t_list *lst)
 		while(str[i])
 		{
 			if(str[i] == '\n')
-				return(0);
+				return(1);
 			i++;
 		}
 		lst = lst->next;
 	}
+	return (0);
+}
+
+int	create_node(t_list **save, int fd)
+{
+	char	*str;
+	ssize_t	readed;
+
+	readed = 1;
+	while (!new_line(*save) && readed > 0)
+	{
+		str = malloc((BUFFER_SIZE + 1) * sizeof(char));
+		if (!str)
+			return (0);
+		readed = read(fd, str, BUFFER_SIZE);
+		if (readed > 0)
+			str[readed] = '\0';
+		if(readed < 0 || !ft_lstaddnew_back(save, str))
+		{
+			ft_lstclear(save, free);
+			return (0);
+		}
+	}
 	return (1);
 }
-char	*lst_copy(t_list *save)
-{
-	char	*sstr;
-	char	*str;
 
-	str = malloc(sizeof(char) * (1 + lst_str_len(save)));
-	if (!str)
-		return (NULL);
-	while(save)
+char	*lst_to_str(t_list **save)
+{
+	char	*str;
+	char	*remain;
+	size_t	len;
+	t_list	*temp;
+
+	len = lst_str_len(*save);
+	str = malloc(sizeof(char) * (len + 1));
+	if(!str)
 	{
-		sstr = save->content; 
-		while (*sstr && *str != '\n')
-		{
-			*str = *sstr;
-			str++;
-			sstr++;
-		}
-		save = save->content;
+		ft_lstclear(save, free);
+		return (NULL);
 	}
-	str = '\0';
+	lst_copy(*save, str, len);
+	temp = *save;
+	while(temp->next)
+		temp = temp->next;
+	remain = lst_reboot(temp);
+	ft_lstclear(save, free);
+	if(!ft_lstaddnew_back(save, remain))
+	{
+		if (remain)
+			free(remain);
+		free(str);
+	}
 	return (str);
 }
 
-char	*lst_reboot(t_list **save);
+char	*lst_reboot(t_list *save)
 {
+	char	*buff;
+	char	*str;
+	size_t	len;
 
+	len = 0;
+	buff = save->content;
+	while(*buff != '\n' && *buff)
+		buff++;
+	if (*buff == '\n')
+		buff++;
+	while(buff[len])
+		len++;
+	str = malloc(sizeof(char) * (len + 1));
+	if(!str)
+		return (NULL);
+	len = 0;
+	while (*buff)
+		str[len++] = *buff++;
+	str[len] = '\0';
+	return (str);
 }
 
 char	*get_next_line(int fd)
 {
 	static t_list	*save = NULL;
-	char			buff[BUFFER_SIZE];
-	ssize_t			readed;
+	char			*str;
 
-	readed = 1;
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, buff, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	while (readed || new_line(save))
+	if (!create_node(&save, fd))
+		return (NULL);
+	str = (lst_to_str(&save));
+	if (str[0] == '\0')
 	{
-		readed = read(fd, buff, BUFFER_SIZE);
-		creat_node(&save, buff, readed);
+		free(str);
+		ft_lstclear(&save, free);
+		return(NULL);
 	}
-	lst_reboot(&save)
+	return (str);
 }
 
 int main()
 {
-	char *save = "oui";
-	char *buff = "Test 12\ntest 12";
-	char *fs = NULL ;
+	char	*str;
+	char	*start = "Starting\n";
+	int		i = 0;
+	int		fd = open("test.txt", O_RDONLY);
 
-	printf("%d\n%s\n%s\n", get_joined_line(&fs, &buff, &save));
+	str = start;
+	while(str && i <15)
+	{
+		printf("Ligne %d: %s", i, str);
+		str = get_next_line(fd);
+		i++;
+	}
 }

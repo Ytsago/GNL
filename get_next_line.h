@@ -6,7 +6,7 @@
 /*   By: secros <secros@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:24:53 by secros            #+#    #+#             */
-/*   Updated: 2024/11/25 17:32:32 by secros           ###   ########.fr       */
+/*   Updated: 2024/11/27 17:15:49 by secros           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,11 @@
 # define GET_NEXT_LINE_H
 
 # include <stdlib.h>
-# include <stdarg.h>
 # include <unistd.h>
 # include <fcntl.h>
 
 #ifndef BUFFER_SIZE
- # define BUFFER_SIZE 10
+ # define BUFFER_SIZE 1000
 #endif
 
 /* typedef struct	s_read
@@ -35,9 +34,11 @@ typedef struct	s_list
 	struct s_list	*next;
 }	t_list;
 
-void	ft_lstclear(t_list **lst, void (*del)(void *));
-void	*ft_lstadd_back(t_list **lst, t_list *new);
+char	*get_next_line(int fd);
+void	*ft_lstclear(t_list **lst, void (*del)(void *));
+void	*ft_lstaddnew_back(t_list **lst, void *content);
+char	*lst_reboot(t_list *save);
+void	lst_copy(t_list *lst, char *dst, size_t len);
 size_t	lst_str_len(t_list *lst);
-t_list	*ft_lstnew(void *content);
 
 #endif
