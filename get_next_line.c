@@ -6,7 +6,7 @@
 /*   By: secros <secros@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:24:57 by secros            #+#    #+#             */
-/*   Updated: 2024/11/27 17:29:00 by secros           ###   ########.fr       */
+/*   Updated: 2024/11/27 17:36:16 by secros           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	create_node(t_list **save, int fd)
 		readed = read(fd, str, BUFFER_SIZE);
 		if (readed > 0)
 			str[readed] = '\0';
-		if(readed < 0 || !ft_lstaddnew_back(save, str))
+		if(readed <= 0 || !ft_lstaddnew_back(save, str))
 		{
 			ft_lstclear(save, free);
 			return (0);
@@ -132,11 +132,13 @@ int main()
 	char	*str;
 	char	*start = "Starting\n";
 	int		i = 0;
-	int		fd = open("test.txt", O_RDONLY);
+	int		fd = open("bible.txt", O_RDONLY);
 
+	str = malloc(1);
 	str = start;
-	while(str && i <15)
+	while(str)
 	{
+		free(str);
 		printf("Ligne %d: %s", i, str);
 		str = get_next_line(fd);
 		i++;
