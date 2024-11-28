@@ -44,11 +44,11 @@ int	create_node(t_list **save, int fd)
 		if (!str)
 			return (0);
 		readed = read(fd, str, BUFFER_SIZE);
-		if (readed > 0)
-			str[readed] = '\0';
-		if(readed <= 0 || !ft_lstaddnew_back(save, str))
+		str[readed] = '\0';
+		if(readed < 0 || !ft_lstaddnew_back(save, str))
 		{
 			ft_lstclear(save, free);
+			free(str);
 			return (0);
 		}
 	}
@@ -122,25 +122,26 @@ char	*get_next_line(int fd)
 	{
 		free(str);
 		ft_lstclear(&save, free);
-		return(NULL);
+		return (NULL);
 	}
 	return (str);
 }
-
+/* 
+#include <stdio.h>
 int main()
 {
 	char	*str;
 	char	*start = "Starting\n";
 	int		i = 0;
-	int		fd = open("bible.txt", O_RDONLY);
+	int		fd = open("test.txt", O_RDONLY);
 
 	str = malloc(1);
-	str = start;
+	str[0] = 'a';
 	while(str)
 	{
 		free(str);
-		printf("Ligne %d: %s", i, str);
 		str = get_next_line(fd);
+		printf("Ligne %d: %s", i, str);
 		i++;
 	}
-}
+} */
