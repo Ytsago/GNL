@@ -6,7 +6,7 @@
 /*   By: secros <secros@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:24:53 by secros            #+#    #+#             */
-/*   Updated: 2024/11/27 17:33:52 by secros           ###   ########.fr       */
+/*   Updated: 2024/11/29 11:00:44 by secros           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct	s_list
 }	t_list;
 
 char	*get_next_line(int fd);
+int		new_line(t_list *lst);
 void	*ft_lstclear(t_list **lst, void (*del)(void *));
 void	*ft_lstaddnew_back(t_list **lst, void *content);
 char	*lst_reboot(t_list *save);

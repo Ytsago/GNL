@@ -1,35 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: secros <secros@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/19 15:24:57 by secros            #+#    #+#             */
-/*   Updated: 2024/11/29 11:00:42 by secros           ###   ########.fr       */
+/*   Created: 2024/11/29 10:59:51 by secros            #+#    #+#             */
+/*   Updated: 2024/11/29 11:37:38 by secros           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
-int	new_line(t_list *lst)
+void	*new_fd(t_read **lst, int fd)
 {
-	size_t	i;
-	char	*str;
+	t_read	*new;
 
-	while(lst)
+	new = *lst;
+	while (new)
 	{
-		i = 0;
-		str = lst->content;
-		while(str[i])
-		{
-			if(str[i] == '\n')
-				return(1);
-			i++;
-		}
-		lst = lst->next;
+		if (new->fd == fd)
+			return (new->save);
+		new = new->next;
 	}
-	return (0);
+	new = malloc(sizeof(t_read));
+	if (!new)
+		return (NULL);
+	new->next = *lst;
+	*lst = new;
+	new->fd = fd;
+	return (new->save);
 }
 
 int	create_node(t_list **save, int fd)
@@ -110,18 +110,20 @@ char	*lst_reboot(t_list *save)
 
 char	*get_next_line(int fd)
 {
-	static t_list	*save = NULL;
+	static t_read	*save = NULL;
+	t_list			*current;
 	char			*str;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (!create_node(&save, fd))
+	current = new_fd(&save, fd);
+	if (!create_node(&current, fd))
 		return (NULL);
-	str = (lst_to_str(&save));
+	str = (lst_to_str(&current));
 	if (str[0] == '\0')
 	{
 		free(str);
-		ft_lstclear(&save, free);
+		ft_lstclear(&current, free);
 		return (NULL);
 	}
 	return (str);
@@ -133,14 +135,16 @@ int main()
 	char	*str;
 	int		i = 0;
 	int		fd = open("Frank Herbert - Dune.txt", O_RDONLY);
-
+	int		fd2 = open("test.txt", O_RDONLY);
 	str = malloc(1);
 	str[0] = 'a';
 	while(str)
 	{
 		free(str);
 		str = get_next_line(fd);
-		printf("Ligne %d: %s", i, str);
+		printf("File : %i, Ligne %d: %s", fd, i, str);
+		str = get_next_line(fd2);
+		printf("File : %i, Ligne %d: %s", fd2, i, str);
 		i++;
 	}
 }
