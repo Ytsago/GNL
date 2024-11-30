@@ -6,7 +6,7 @@
 /*   By: secros <secros@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 09:29:37 by secros            #+#    #+#             */
-/*   Updated: 2024/11/30 16:52:25 by secros           ###   ########.fr       */
+/*   Updated: 2024/11/30 16:55:51 by secros           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	buff_cleaner(char *buff, size_t i)
 {
 	size_t	j;
-	
+
 	j = 0;
 	while (buff[i])
 		buff[j++] = buff[i++];
@@ -36,7 +36,6 @@ int	is_new_line(char *str)
 	}
 	return (0);
 }
-
 
 char	*ft_strfreejoin(char *s1, char *s2)
 {

@@ -6,7 +6,7 @@
 /*   By: secros <secros@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 13:46:03 by secros            #+#    #+#             */
-/*   Updated: 2024/11/30 16:53:50 by secros           ###   ########.fr       */
+/*   Updated: 2024/11/30 17:15:51 by secros           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,10 @@ char	*build_line(char *str, char *buff)
 char	*read_file(int fd, char *buff)
 {
 	ssize_t		size;
+	size_t		i;
 	char		*str;
 
+	i = 0;
 	str = NULL;
 	size = 1;
 	while (size > 0 && !is_new_line(buff))
@@ -59,6 +61,9 @@ char	*read_file(int fd, char *buff)
 	}
 	if (size > 0)
 		str = build_line(str, buff);
+	else
+		while(buff[i])
+			buff[i++] = '\0';
 	return (str);
 }
 
@@ -81,11 +86,13 @@ char	*get_next_line(int fd)
 	return (str);
 }
 
-/* int main ()
+/* 
+#include <fcntl.h>
+int main ()
 {
 	int fd = open("test.txt", O_RDONLY);
 	int	i = 0;
-	char *str = "0123456789012345678901234567890123456789012";
+	char *str;
 
 	str = get_next_line(fd);
 	while(str)
@@ -95,4 +102,5 @@ char	*get_next_line(int fd)
 		str = get_next_line(fd);
 		i++;
 	}
+	printf("%s",str);
 } */
