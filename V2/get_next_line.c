@@ -6,7 +6,7 @@
 /*   By: secros <secros@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 13:46:03 by secros            #+#    #+#             */
-/*   Updated: 2024/11/30 16:51:33 by secros           ###   ########.fr       */
+/*   Updated: 2024/11/30 16:53:50 by secros           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	*build_line(char *str, char *buff)
 	if (buff[i] == '\n')
 		end[i++] = '\n';
 	end[i] = '\0';
-	fs = ft_strjoin(str, end);
+	fs = ft_strfreejoin(str, end);
 	free(end);
 	buff_cleaner(buff, i);
 	if (!fs)
@@ -41,15 +41,13 @@ char	*build_line(char *str, char *buff)
 char	*read_file(int fd, char *buff)
 {
 	ssize_t		size;
-	size_t		i;
 	char		*str;
 
 	str = NULL;
 	size = 1;
-	i = 0;
 	while (size > 0 && !is_new_line(buff))
 	{
-		str = ft_strjoin(str, buff);
+		str = ft_strfreejoin(str, buff);
 		if (!str)
 			return (NULL);
 		if (size < 0 && str)
@@ -61,9 +59,6 @@ char	*read_file(int fd, char *buff)
 	}
 	if (size > 0)
 		str = build_line(str, buff);
-	else
-		while (i < BUFFER_SIZE)
-			buff[i++] = '\0';
 	return (str);
 }
 
