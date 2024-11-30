@@ -6,64 +6,11 @@
 /*   By: secros <secros@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 13:46:03 by secros            #+#    #+#             */
-/*   Updated: 2024/11/30 14:58:19 by secros           ###   ########.fr       */
+/*   Updated: 2024/11/30 16:51:33 by secros           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-int	is_new_line(char *str)
-{
-	size_t	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '\n')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-char	*ft_strjoin(char *s1, char *s2)
-{
-	char	*fs;
-	size_t	len1;
-	size_t	len2;
-
-	len1 = 0;
-	len2 = 0;
-	if (s1)
-		while (s1[len1])
-			len1++;
-	while (s2[len2])
-		len2++;
-	fs = (char *) malloc(sizeof(char) * (len1 + len2 + 1));
-	if (!fs && s1)
-		free(s1);
-	if (!fs)
-		return (NULL);
-	fs[len1 + len2] = '\0';
-	while ((len2-- > 0))
-		fs[len1 + len2] = s2[len2];
-	while (len1-- > 0)
-		fs[len1] = s1[len1];
-	if (s1)
-		free(s1);
-	return (fs);
-}
-
-void	buff_cleaner(char *buff, size_t i)
-{
-	size_t	j;
-	
-	j = 0;
-	while (buff[i])
-		buff[j++] = buff[i++];
-	while (buff[j])
-		buff[j++] = '\0';
-}
 
 char	*build_line(char *str, char *buff)
 {
@@ -110,6 +57,7 @@ char	*read_file(int fd, char *buff)
 		if (size < 0)
 			return (NULL);
 		size = read(fd, buff, BUFFER_SIZE);
+		buff[size] = '\0';
 	}
 	if (size > 0)
 		str = build_line(str, buff);
@@ -138,7 +86,7 @@ char	*get_next_line(int fd)
 	return (str);
 }
 
-int main ()
+/* int main ()
 {
 	int fd = open("test.txt", O_RDONLY);
 	int	i = 0;
@@ -152,4 +100,4 @@ int main ()
 		str = get_next_line(fd);
 		i++;
 	}
-}
+} */

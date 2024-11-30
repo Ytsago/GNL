@@ -6,7 +6,7 @@
 /*   By: secros <secros@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:24:53 by secros            #+#    #+#             */
-/*   Updated: 2024/11/30 12:11:35 by secros           ###   ########.fr       */
+/*   Updated: 2024/11/30 14:18:39 by secros           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <fcntl.h>
 
 #ifndef BUFFER_SIZE
- # define BUFFER_SIZE 1
+ # define BUFFER_SIZE 10000000
 #endif
 
 /* typedef struct	s_read
