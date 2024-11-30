@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: secros <secros@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 13:46:03 by secros            #+#    #+#             */
-/*   Updated: 2024/11/30 17:25:17 by secros           ###   ########.fr       */
+/*   Updated: 2024/11/30 17:28:21 by secros           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*build_line(char *str, char *buff)
 {
@@ -69,13 +69,13 @@ char	*read_file(int fd, char *buff)
 
 char	*get_next_line(int fd)
 {
-	static char	buff[BUFFER_SIZE + 1];
+	static char	buff[MAX_FD][BUFFER_SIZE + 1];
 	char		*str;
 
 	str = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	str = read_file(fd, buff);
+	str = read_file(fd, buff[fd]);
 	if (!str)
 		return (NULL);
 	if (!*str)
@@ -86,11 +86,12 @@ char	*get_next_line(int fd)
 	return (str);
 }
 
-/* 
+
 #include <fcntl.h>
 int main ()
 {
 	int fd = open("test.txt", O_RDONLY);
+	int	fd2 = open("test2.txt", O_RDONLY);
 	int	i = 0;
 	char *str;
 
@@ -99,8 +100,11 @@ int main ()
 	{
 		printf("Ligne %d: %s", i, str);
 		free(str);
+		str = get_next_line(fd2);
+		printf("Ligne %d: %s", i, str);
+		free(str);
 		str = get_next_line(fd);
 		i++;
 	}
 	printf("%s",str);
-} */
+}
