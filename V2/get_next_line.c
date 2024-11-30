@@ -6,7 +6,7 @@
 /*   By: secros <secros@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 13:46:03 by secros            #+#    #+#             */
-/*   Updated: 2024/11/30 17:25:17 by secros           ###   ########.fr       */
+/*   Updated: 2024/11/30 20:28:37 by secros           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ char	*build_line(char *str, char *buff)
 	i = 0;
 	end = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!end)
+	{
+		free(str);
 		return (NULL);
+	}
 	while (buff[i] && buff[i] != '\n')
 	{
 		end[i] = buff[i];
@@ -52,11 +55,11 @@ char	*read_file(int fd, char *buff)
 		str = ft_strfreejoin(str, buff);
 		if (!str)
 			return (NULL);
+		size = read(fd, buff, BUFFER_SIZE);
 		if (size < 0 && str)
 			free(str);
 		if (size < 0)
-			return (NULL);
-		size = read(fd, buff, BUFFER_SIZE);
+			return (buff_cleaner(buff, BUFFER_SIZE), NULL);
 		buff[size] = '\0';
 	}
 	if (size > 0)
@@ -86,21 +89,20 @@ char	*get_next_line(int fd)
 	return (str);
 }
 
-/* 
-#include <fcntl.h>
-int main ()
-{
-	int fd = open("test.txt", O_RDONLY);
-	int	i = 0;
-	char *str;
+// #include <fcntl.h>
+// int main ()
+// {
+// 	int fd = open("t1.txt", O_RDONLY);
+// 	int	i = 0;
+// 	char *str;
 
-	str = get_next_line(fd);
-	while(str)
-	{
-		printf("Ligne %d: %s", i, str);
-		free(str);
-		str = get_next_line(fd);
-		i++;
-	}
-	printf("%s",str);
-} */
+// 	str = get_next_line(fd);
+// 	while(str)
+// 	{
+// 		printf("%s", str);
+// 		free(str);
+// 		str = get_next_line(fd);
+// 		i++;
+// 	}
+// 	printf("%s",str);
+// }

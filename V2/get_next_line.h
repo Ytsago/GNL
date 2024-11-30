@@ -6,7 +6,7 @@
 /*   By: secros <secros@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 09:29:40 by secros            #+#    #+#             */
-/*   Updated: 2024/11/30 17:12:18 by secros           ###   ########.fr       */
+/*   Updated: 2024/11/30 20:20:09 by secros           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE 10000000
 # endif
 
 # include <stdlib.h>
