@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: secros <secros@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/30 09:29:31 by secros            #+#    #+#             */
-/*   Updated: 2024/11/30 13:24:27 by secros           ###   ########.fr       */
+/*   Created: 2024/11/30 13:46:03 by secros            #+#    #+#             */
+/*   Updated: 2024/11/30 14:58:19 by secros           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,15 +54,27 @@ char	*ft_strjoin(char *s1, char *s2)
 	return (fs);
 }
 
+void	buff_cleaner(char *buff, size_t i)
+{
+	size_t	j;
+	
+	j = 0;
+	while (buff[i])
+		buff[j++] = buff[i++];
+	while (buff[j])
+		buff[j++] = '\0';
+}
+
 char	*build_line(char *str, char *buff)
 {
-	char	end[BUFFER_SIZE + 1];
+	char	*end;
 	char	*fs;
 	size_t	i;
-	size_t	j;
 
 	i = 0;
-	j = 0;
+	end = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!end)
+		return (NULL);
 	while (buff[i] && buff[i] != '\n')
 	{
 		end[i] = buff[i];
@@ -72,61 +84,65 @@ char	*build_line(char *str, char *buff)
 		end[i++] = '\n';
 	end[i] = '\0';
 	fs = ft_strjoin(str, end);
+	free(end);
+	buff_cleaner(buff, i);
 	if (!fs)
 		return (NULL);
-	while (buff[i])
-		buff[j++] = buff[i++];
-	while (buff[j])
-		buff[j++] = '\0';
 	return (fs);
 }
-int	read_file(int fd, char *buff, char **str)
+
+char	*read_file(int fd, char *buff)
 {
 	ssize_t		size;
-	
+	size_t		i;
+	char		*str;
+
+	str = NULL;
 	size = 1;
+	i = 0;
 	while (size > 0 && !is_new_line(buff))
 	{
-		*str = ft_strjoin(*str, buff);
-		if (!*str)
-			return (-1);
-		if (size < 0 && *str)
-			free(*str);
+		str = ft_strjoin(str, buff);
+		if (!str)
+			return (NULL);
+		if (size < 0 && str)
+			free(str);
 		if (size < 0)
-			return (-1);
+			return (NULL);
 		size = read(fd, buff, BUFFER_SIZE);
 	}
-	return (size);
+	if (size > 0)
+		str = build_line(str, buff);
+	else
+		while (i < BUFFER_SIZE)
+			buff[i++] = '\0';
+	return (str);
 }
+
 char	*get_next_line(int fd)
 {
 	static char	buff[BUFFER_SIZE + 1];
 	char		*str;
-	int			end;
 
 	str = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	end = read_file(fd, buff, &str);
-	if (end == -1)
-		return (NULL);
-	if (end > 0)
-		str = build_line(str, buff);
+	str = read_file(fd, buff);
 	if (!str)
 		return (NULL);
 	if (!*str)
 	{
 		free(str);
-		return(NULL);
+		return (NULL);
 	}
 	return (str);
 }
 
-/* int main ()
+int main ()
 {
-	int fd = open("1", O_RDONLY);
+	int fd = open("test.txt", O_RDONLY);
 	int	i = 0;
-	char *str = NULL;
+	char *str = "0123456789012345678901234567890123456789012";
 
 	str = get_next_line(fd);
 	while(str)
@@ -137,4 +153,3 @@ char	*get_next_line(int fd)
 		i++;
 	}
 }
- */
