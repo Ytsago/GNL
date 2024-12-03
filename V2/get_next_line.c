@@ -6,7 +6,7 @@
 /*   By: secros <secros@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 13:46:03 by secros            #+#    #+#             */
-/*   Updated: 2024/11/30 20:28:37 by secros           ###   ########.fr       */
+/*   Updated: 2024/12/03 10:41:04 by secros           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,21 +88,21 @@ char	*get_next_line(int fd)
 	}
 	return (str);
 }
+/* 
+#include <fcntl.h>
+int main ()
+{
+	int fd = open("t1.txt", O_RDONLY);
+	int	i = 0;
+	char *str;
 
-// #include <fcntl.h>
-// int main ()
-// {
-// 	int fd = open("t1.txt", O_RDONLY);
-// 	int	i = 0;
-// 	char *str;
-
-// 	str = get_next_line(fd);
-// 	while(str)
-// 	{
-// 		printf("%s", str);
-// 		free(str);
-// 		str = get_next_line(fd);
-// 		i++;
-// 	}
-// 	printf("%s",str);
-// }
+	str = get_next_line(fd);
+	while(str)
+	{
+		printf("%s", str);
+		free(str);
+		str = get_next_line(fd);
+		i++;
+	}
+	printf("%s",str);
+} */

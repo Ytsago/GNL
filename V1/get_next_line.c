@@ -6,7 +6,7 @@
 /*   By: secros <secros@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:24:57 by secros            #+#    #+#             */
-/*   Updated: 2024/11/29 11:00:42 by secros           ###   ########.fr       */
+/*   Updated: 2024/12/02 10:02:40 by secros           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,7 @@ char	*get_next_line(int fd)
 	return (str);
 }
 
+#include <fcntl.h>
 #include <stdio.h>
 int main()
 {
